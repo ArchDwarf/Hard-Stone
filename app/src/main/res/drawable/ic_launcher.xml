@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Иконка: блок руды (камень с изумрудными вкраплениями) -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="16"
+    android:viewportHeight="16">
+    <path android:fillColor="#12161F" android:pathData="M0,0h16v16h-16z" />
+    <path android:fillColor="#6B7385" android:pathData="M3,3h10v10h-10z" />
+    <path android:fillColor="#7E8799" android:pathData="M3,3h4v3h-4zM9,8h4v2h-4zM4,10h3v3h-3z" />
+    <path android:fillColor="#3FD08A" android:pathData="M5,5h2v2h-2zM10,4h2v2h-2zM8,10h2v2h-2zM4,9h1v1h-1z" />
+    <path android:fillColor="#9AF5C6" android:pathData="M5,5h1v1h-1zM10,4h1v1h-1zM8,10h1v1h-1z" />
+</vector>
