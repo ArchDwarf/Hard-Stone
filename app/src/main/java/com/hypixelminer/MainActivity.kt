@@ -41,6 +41,17 @@ class MainActivity : Activity() {
     private var loading = false
     private var ignoreSpinner = false
 
+    // ── состояние графика
+    private lateinit var scroll: ScrollView
+    private var chartCard: LinearLayout? = null
+    private var chartView: ChartView? = null
+    private var chartTitle: TextView? = null
+    private val rangeChips = mutableListOf<Pair<Long, TextView>>()
+    private var chartKey: String? = null          // null = всего, иначе ключ ресурса
+    private var chartRange: Long = 0L             // 0 = вся история
+    private var chartHistory: List<Snapshot> = emptyList()
+    private var chartChecked: Long = 0L
+
     // ─────────────────────────── жизненный цикл ───────────────────────────
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -170,10 +181,50 @@ class MainActivity : Activity() {
         })
 
         // ── график
-        dataBox.addView(card().apply {
-            addView(label("Динамика по проверкам"))
-            addView(ChartView(context).apply { setData(history); setPadding(0, dp(8), 0, 0) })
-        })
+        chartHistory = history
+        chartChecked = store.lastChecked(uuid, p.id)
+        rangeChips.clear()
+        val chartBox = card().apply {
+            val head = LinearLayout(context).apply {
+                orientation = LinearLayout.HORIZONTAL
+                gravity = Gravity.CENTER_VERTICAL
+            }
+            val titleView = label("")
+            chartTitle = titleView
+            head.addView(titleView, LinearLayout.LayoutParams(0, -2, 1f))
+            head.addView(text("сбросить", 12f, Theme.ACCENT, bold = true).apply {
+                setPadding(dp(8), dp(4), 0, dp(4))
+                setOnClickListener { chartKey = null; updateChart() }
+            })
+            addView(head)
+
+            val chipsRow = LinearLayout(context).apply {
+                orientation = LinearLayout.HORIZONTAL
+                setPadding(0, dp(10), 0, dp(6))
+            }
+            listOf(DAY to "Сутки", 7 * DAY to "Неделя", 30 * DAY to "Месяц", 0L to "Всё").forEach { (range, title) ->
+                val chip = text(title, 13f, Theme.TEXT, bold = true).apply {
+                    setPadding(dp(12), dp(6), dp(12), dp(6))
+                    setOnClickListener { chartRange = range; updateChart() }
+                }
+                rangeChips += range to chip
+                chipsRow.addView(chip)
+                chipsRow.addView(space(dp(6)))
+            }
+            addView(chipsRow)
+
+            val cv = ChartView(context)
+            chartView = cv
+            addView(cv)
+            addView(text(
+                "Проведи пальцем по графику, чтобы увидеть точное значение. " +
+                    "Нажми на ресурс в списке ниже, чтобы построить его график.",
+                12f, Theme.MUTED
+            ).apply { setPadding(0, dp(8), 0, 0) })
+        }
+        chartCard = chartBox
+        dataBox.addView(chartBox)
+        updateChart()
 
         // ── по ресурсам
         val rows = MiningItems.ALL.map { it to (full[it.key] ?: 0L) }.sortedByDescending { it.second }
@@ -183,7 +234,14 @@ class MainActivity : Activity() {
             addView(space(dp(6)))
             nonZero.forEachIndexed { i, (item, value) ->
                 val d = value - (today?.counts?.get(item.key) ?: value)
-                addView(resourceRow(item, value, d, maxOf(1L, nonZero.first().second)))
+                addView(resourceRow(item, value, d, maxOf(1L, nonZero.first().second)).apply {
+                    isClickable = true
+                    setOnClickListener {
+                        chartKey = if (chartKey == item.key) null else item.key
+                        updateChart()
+                        chartCard?.let { c -> scroll.smoothScrollTo(0, dataBox.top + c.top - dp(8)) }
+                    }
+                })
                 if (i < nonZero.lastIndex) addView(divider())
             }
             val zeros = rows.size - nonZero.size
@@ -204,6 +262,28 @@ class MainActivity : Activity() {
                 "Hypixel обновляет их с задержкой в несколько минут.",
             12f, Theme.MUTED
         ).apply { setPadding(dp(4), dp(4), dp(4), dp(24)) })
+    }
+
+    private fun updateChart() {
+        val cv = chartView ?: return
+        val item = MiningItems.ALL.find { it.key == chartKey }
+        val series = chartHistory
+            .map { it.time to (if (item == null) it.total else it.counts[item.key] ?: 0L) }
+            .toMutableList()
+        // после последнего изменения значение держалось до последней проверки
+        if (series.isNotEmpty() && chartChecked > series.last().first) {
+            series += chartChecked to series.last().second
+        }
+        val from = if (chartRange == 0L) null else System.currentTimeMillis() - chartRange
+        cv.setData(series, item?.color ?: Theme.ACCENT, from)
+
+        chartTitle?.text = "ГРАФИК · " + (item?.title ?: "всего добыто").uppercase()
+        chartTitle?.setTextColor(if (item == null) Theme.MUTED else item.color)
+        rangeChips.forEach { (range, chip) ->
+            val on = range == chartRange
+            chip.setTextColor(if (on) Theme.BG else Theme.TEXT)
+            chip.background = rounded(if (on) Theme.ACCENT else Theme.LINE, 20)
+        }
     }
 
     private fun addPowder(p: SkyProfile) {
@@ -232,7 +312,7 @@ class MainActivity : Activity() {
     // ─────────────────────────── построение интерфейса ───────────────────────────
 
     private fun buildUi() {
-        val scroll = ScrollView(this).apply {
+        scroll = ScrollView(this).apply {
             setBackgroundColor(Theme.BG)
             isFillViewport = true
         }
@@ -474,5 +554,9 @@ class MainActivity : Activity() {
     private fun hideKeyboard() {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(window.decorView.windowToken, 0)
+    }
+
+    companion object {
+        private const val DAY = 24 * 60 * 60 * 1000L
     }
 }

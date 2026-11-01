@@ -11,15 +11,29 @@ android {
         applicationId = "com.hypixelminer"
         minSdk = 24
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.1"
+    }
+
+    // Постоянный ключ подписи: благодаря ему новые версии ставятся поверх старой
+    // без удаления приложения (и без потери истории). Это ключ любительского проекта,
+    // для публикации в Google Play нужен свой секретный ключ.
+    signingConfigs {
+        create("shared") {
+            storeFile = file("signing.keystore")
+            storePassword = "hypixelminer"
+            keyAlias = "hypixelminer"
+            keyPassword = "hypixelminer"
+        }
     }
 
     buildTypes {
+        debug {
+            signingConfig = signingConfigs.getByName("shared")
+        }
         release {
             isMinifyEnabled = false
-            // Подписываем отладочным ключом, чтобы release-APK сразу ставился на телефон
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("shared")
         }
     }
 
