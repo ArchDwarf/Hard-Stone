@@ -1,0 +1,28 @@
+name: Сборка для ПК (Windows)
+
+on:
+  push:
+    paths:
+      - 'desktop/**'
+      - '.github/workflows/desktop.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: desktop
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Установить зависимости
+        run: npm install --no-audit --no-fund
+      - name: Собрать установщик и portable
+        run: npx electron-builder --win --publish never
+      - uses: actions/upload-artifact@v4
+        with:
+          name: HypixelMiner-Windows
+          path: desktop/dist/*.exe

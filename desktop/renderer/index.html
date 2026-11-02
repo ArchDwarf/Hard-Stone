@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Шахтёр Hypixel</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div class="brand">
+        <svg class="logo" viewBox="0 0 16 16" aria-hidden="true">
+          <rect x="3" y="3" width="10" height="10" fill="#6B7385"/>
+          <rect x="3" y="3" width="4" height="3" fill="#7E8799"/>
+          <rect x="9" y="8" width="4" height="2" fill="#7E8799"/>
+          <rect x="4" y="10" width="3" height="3" fill="#7E8799"/>
+          <rect x="5" y="5" width="2" height="2" fill="#3FD08A"/>
+          <rect x="10" y="4" width="2" height="2" fill="#3FD08A"/>
+          <rect x="8" y="10" width="2" height="2" fill="#3FD08A"/>
+          <rect x="4" y="9" width="1" height="1" fill="#3FD08A"/>
+          <rect x="5" y="5" width="1" height="1" fill="#9AF5C6"/>
+          <rect x="10" y="4" width="1" height="1" fill="#9AF5C6"/>
+          <rect x="8" y="10" width="1" height="1" fill="#9AF5C6"/>
+        </svg>
+        <div class="titles">
+          <h1>Шахтёр Hypixel</h1>
+          <p id="subtitle">SkyBlock · добытые блоки</p>
+        </div>
+      </div>
+      <div class="actions">
+        <select id="profile" class="select" aria-label="Профиль SkyBlock" hidden></select>
+        <label class="auto" title="Обновлять данные автоматически, пока окно открыто">
+          <input type="checkbox" id="auto"> Авто · 5 мин
+        </label>
+        <button id="refresh" class="btn primary" title="Обновить (F5)">Обновить</button>
+        <button id="toggleSettings" class="btn icon" aria-label="Настройки" title="Настройки">⚙</button>
+      </div>
+    </header>
+
+    <section id="settings" class="card settings" hidden>
+      <h2 class="label">Настройки</h2>
+      <form id="settingsForm" class="settings-form" autocomplete="off">
+        <label class="field">
+          <span>Ник в Minecraft</span>
+          <input id="nick" type="text" spellcheck="false" placeholder="например, Notch">
+        </label>
+        <label class="field">
+          <span>API-ключ Hypixel</span>
+          <input id="key" type="password" spellcheck="false" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx">
+        </label>
+        <button type="submit" class="btn primary">Сохранить и загрузить</button>
+      </form>
+      <p class="help">
+        Ключ бесплатный: зайди на <a href="https://developer.hypixel.net" target="_blank">developer.hypixel.net</a>,
+        войди через аккаунт Hypixel и создай ключ. Он хранится только на этом компьютере.<br>
+        В игре должен быть включён доступ к коллекциям: SkyBlock Menu → Settings → API Settings → Collections.
+      </p>
+    </section>
+
+    <div id="status" class="status" hidden></div>
+
+    <main id="data" class="grid" hidden>
+      <div class="col">
+        <section id="summaryCard" class="card summary">
+          <h2 class="label">Всего добыто</h2>
+          <div id="total" class="big">0</div>
+          <div class="chips">
+            <span id="today" class="chip"></span>
+            <span id="week" class="chip"></span>
+          </div>
+        </section>
+
+        <section id="chartCard" class="card chart-card">
+          <div class="chart-head">
+            <h2 id="chartTitle" class="label">График · всего добыто</h2>
+            <button id="chartReset" class="link" hidden>Показать общий итог</button>
+          </div>
+          <div class="ranges" role="group" aria-label="Период графика">
+            <button class="range" data-range="86400000">Сутки</button>
+            <button class="range" data-range="604800000">Неделя</button>
+            <button class="range" data-range="2592000000">Месяц</button>
+            <button class="range" data-range="0">Всё</button>
+          </div>
+          <canvas id="chart" class="chart"></canvas>
+          <p class="hint">Наведи курсор на график, чтобы увидеть точное значение. Нажми на ресурс в списке, чтобы построить его график.</p>
+        </section>
+
+        <section id="powderCard" class="card" hidden>
+          <h2 class="label">Порошок Heart of the Mountain</h2>
+          <ul id="powderList" class="list"></ul>
+        </section>
+      </div>
+
+      <section id="resCard" class="card resources">
+        <h2 class="label">По ресурсам · прирост за сегодня</h2>
+        <ul id="resList" class="list"></ul>
+        <p id="zeroNote" class="note" hidden></p>
+      </section>
+    </main>
+
+    <footer id="foot" class="foot" hidden></footer>
+  </div>
+
+  <script src="format.js"></script>
+  <script src="chart.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

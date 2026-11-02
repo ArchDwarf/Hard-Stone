@@ -1,0 +1,47 @@
+{
+  "name": "hypixel-miner-desktop",
+  "version": "1.1.0",
+  "description": "Статистика добычи блоков в Hypixel SkyBlock",
+  "main": "main.js",
+  "author": "ArchDwarf",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win --publish never"
+  },
+  "devDependencies": {
+    "electron": "33.2.1",
+    "electron-builder": "25.1.8"
+  },
+  "build": {
+    "appId": "com.hypixelminer.desktop",
+    "productName": "Hypixel Miner",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "renderer/**",
+      "build/icon.png"
+    ],
+    "win": {
+      "icon": "build/icon.png",
+      "target": [
+        { "target": "nsis", "arch": ["x64"] },
+        { "target": "portable", "arch": ["x64"] }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "shortcutName": "Шахтёр Hypixel",
+      "artifactName": "HypixelMiner-Setup-${version}.${ext}"
+    },
+    "portable": {
+      "artifactName": "HypixelMiner-Portable-${version}.${ext}"
+    }
+  }
+}

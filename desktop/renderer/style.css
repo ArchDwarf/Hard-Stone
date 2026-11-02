@@ -1,0 +1,124 @@
+/* Тёмная тема «шахта»: та же палитра, что и в Android-версии */
+:root {
+  --bg: #12161F;
+  --card: #1C2230;
+  --line: #2A3242;
+  --text: #E6EAF2;
+  --muted: #8B93A7;
+  --accent: #3FD08A;
+  --accent-dim: #1E3A2F;
+  --warn: #F2B84B;
+  --error: #FF6B6B;
+  --font-ui: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--text); }
+body { font: 14px/1.45 var(--font-ui); -webkit-font-smoothing: antialiased; }
+[hidden] { display: none !important; }
+
+.wrap { max-width: 1240px; margin: 0 auto; padding: 20px 24px 32px; display: flex; flex-direction: column; gap: 14px; }
+
+/* ── шапка */
+.top { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.logo { width: 40px; height: 40px; border-radius: 10px; background: var(--card); padding: 4px; image-rendering: pixelated; flex: none; }
+.titles h1 { margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.01em; }
+.titles p { margin: 0; color: var(--muted); font-size: 13px; }
+.actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+.btn {
+  font: 600 14px var(--font-ui); color: var(--text); background: var(--card);
+  border: 0; border-radius: 12px; height: 40px; padding: 0 16px; cursor: pointer;
+}
+.btn:hover { filter: brightness(1.15); }
+.btn:disabled { opacity: 0.6; cursor: default; filter: none; }
+.btn.primary { background: var(--accent); color: var(--bg); }
+.btn.icon { width: 40px; padding: 0; font-size: 18px; }
+.btn:focus-visible, .range:focus-visible, .link:focus-visible, .select:focus-visible,
+.res:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.select {
+  font: 14px var(--font-ui); color: var(--text); background: var(--card);
+  border: 0; border-radius: 12px; height: 40px; padding: 0 12px; cursor: pointer;
+}
+.auto { display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: 13px; padding: 0 6px; cursor: pointer; user-select: none; }
+.auto input { accent-color: var(--accent); width: 16px; height: 16px; margin: 0; }
+
+/* ── карточки */
+.card { background: var(--card); border-radius: 16px; padding: 16px 18px; min-width: 0; }
+.label { margin: 0; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+
+.settings-form { display: grid; grid-template-columns: 1fr 1.4fr auto; gap: 12px; align-items: end; margin-top: 12px; }
+.field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.field span { font-size: 12px; color: var(--muted); }
+.field input {
+  font: 15px var(--font-ui); color: var(--text); background: var(--bg);
+  border: 1px solid var(--line); border-radius: 10px; height: 40px; padding: 0 12px; width: 100%;
+}
+.help { margin: 12px 0 0; color: var(--muted); font-size: 12.5px; max-width: 80ch; }
+.help a { color: var(--accent); }
+
+.status { background: var(--card); border-radius: 12px; padding: 12px 16px; color: var(--muted); }
+.status.warn { color: var(--warn); }
+.status.error { color: var(--error); }
+
+/* ── сетка данных */
+.grid { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(300px, 1fr); gap: 14px; align-items: start; }
+.col { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+
+.big { font-size: 44px; font-weight: 700; letter-spacing: -0.02em; margin: 2px 0 10px; font-variant-numeric: tabular-nums; }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip { font-weight: 700; font-size: 13px; padding: 5px 12px; border-radius: 20px; background: var(--line); color: var(--muted); font-variant-numeric: tabular-nums; }
+.chip.up { background: var(--accent-dim); color: var(--accent); }
+
+.chart-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.link { background: none; border: 0; color: var(--accent); font: 700 12px var(--font-ui); cursor: pointer; padding: 4px 0; }
+.ranges { display: flex; gap: 6px; margin: 10px 0 8px; flex-wrap: wrap; }
+.range {
+  font: 700 13px var(--font-ui); color: var(--text); background: var(--line);
+  border: 0; border-radius: 20px; padding: 6px 14px; cursor: pointer;
+}
+.range.on { background: var(--accent); color: var(--bg); }
+.chart { display: block; width: 100%; height: 320px; cursor: crosshair; touch-action: none; }
+.hint { margin: 8px 0 0; color: var(--muted); font-size: 12px; }
+
+/* ── списки */
+.list { list-style: none; margin: 6px 0 0; padding: 0; }
+.list > li + li { border-top: 1px solid var(--line); }
+
+.res {
+  display: block; width: 100%; text-align: left; background: none; border: 0; color: inherit;
+  font: inherit; padding: 10px 8px; margin: 0 -8px; width: calc(100% + 16px); border-radius: 10px; cursor: pointer;
+}
+.res:hover { background: rgba(255, 255, 255, 0.03); }
+.res.on { background: rgba(255, 255, 255, 0.06); }
+.res-top { display: flex; align-items: center; gap: 10px; }
+.swatch { width: 12px; height: 12px; border-radius: 3px; flex: none; }
+.res-name { flex: 1; min-width: 0; font-size: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.res-delta { font-size: 12px; font-weight: 700; color: var(--accent); font-variant-numeric: tabular-nums; }
+.res-delta.down { color: var(--error); }
+.res-val { font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.bar { height: 4px; border-radius: 2px; background: var(--line); margin-top: 8px; overflow: hidden; }
+.bar > i { display: block; height: 100%; border-radius: 2px; }
+
+.powder { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 0; }
+.powder b { display: block; text-align: right; font-size: 15px; font-variant-numeric: tabular-nums; }
+.powder small { display: block; text-align: right; color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+
+.note { margin: 10px 0 0; color: var(--muted); font-size: 12px; }
+.foot { color: var(--muted); font-size: 12px; padding: 0 4px; }
+
+@media (max-width: 900px) {
+  .grid { grid-template-columns: minmax(0, 1fr); }
+  .settings-form { grid-template-columns: 1fr; }
+}
+@media (max-width: 520px) {
+  .wrap { padding: 14px 16px 24px; }
+  .big { font-size: 36px; }
+  .chart { height: 240px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .btn, .range, .res { transition: background-color 0.12s, filter 0.12s; }
+}
